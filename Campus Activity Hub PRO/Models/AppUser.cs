@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace Campus_Activity_Hub_PRO_comand_second.Models
+namespace Campus_Activity_Hub_PRO.Models
 {
     public class AppUser : IdentityUser<int>
     {
