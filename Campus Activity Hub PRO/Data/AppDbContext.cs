@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Campus_Activity_Hub_PRO.Data
 {
-    public class AppDbContext : IdentityDbContext<AppUser, IdentityRole<int>, int>
+    public class AppDbContext : IdentityDbContext<AppUser>
     {
         public DbSet<Category> Categories => Set<Category>();
         public DbSet<Event> Events => Set<Event>();

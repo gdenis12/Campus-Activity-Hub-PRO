@@ -2,9 +2,8 @@
 
 namespace Campus_Activity_Hub_PRO.Models
 {
-    public class AppUser : IdentityUser<int>
+    public class AppUser : IdentityUser
     {
         public string Name { get; set; } = "";
-
     }
 }
