@@ -1,5 +1,4 @@
 ﻿using Campus_Activity_Hub_PRO.Models;
-using Campus_Activity_Hub_PRO_comand_second.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

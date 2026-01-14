@@ -1,4 +1,4 @@
-﻿using Campus_Activity_Hub_PRO_comand_second.Models;
+﻿using Campus_Activity_Hub_PRO.Models;
 
 namespace Campus_Activity_Hub_PRO.Models
 {

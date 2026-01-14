@@ -1,5 +1,5 @@
 ﻿using Campus_Activity_Hub_PRO.Models.Auth;
-using Campus_Activity_Hub_PRO_comand_second.Models;
+using Campus_Activity_Hub_PRO.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
