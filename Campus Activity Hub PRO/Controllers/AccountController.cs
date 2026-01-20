@@ -34,7 +34,7 @@ namespace Campus_Activity_Hub_PRO.Controllers
 
             var allowedRoles = new[] { "Student", "Organizer" };
             if (!allowedRoles.Contains(vm.Role))
-                ModelState.AddModelError(nameof(vm.Role), "Invalid role.");
+                ModelState.AddModelError(nameof(vm.Role), "Invalid role");
 
             if (!ModelState.IsValid) return View(vm);
 
@@ -80,13 +80,20 @@ namespace Campus_Activity_Hub_PRO.Controllers
             var res = await _signInManager.PasswordSignInAsync(email, password, false, lockoutOnFailure: false);
             if (!res.Succeeded)
             {
-                ModelState.AddModelError("", "Invalid email or password.");
+                ModelState.AddModelError("", "Invalid email or password");
                 ViewBag.ReturnUrl = returnUrl;
                 return View();
             }
 
+
             if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl))
                 return Redirect(returnUrl);
+
+
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user != null && await _userManager.IsInRoleAsync(user, "Admin"))
+                return RedirectToAction("Dashboard", "Admin");
+
 
             return RedirectToAction("Index", "Events");
         }
