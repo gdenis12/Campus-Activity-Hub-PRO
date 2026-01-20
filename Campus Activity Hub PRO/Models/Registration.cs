@@ -8,7 +8,7 @@ namespace Campus_Activity_Hub_PRO.Models
         public int EventId { get; set; }
         public Event Event { get; set; } = null!;
 
-        public int UserId { get; set; }
+        public string UserId { get; set; } = "";
         public AppUser User { get; set; } = null!;
 
         public DateTime RegistrationDate { get; set; }
