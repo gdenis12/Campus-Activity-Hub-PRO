@@ -18,7 +18,7 @@ namespace Campus_Activity_Hub_PRO.Models
         public int CategoryId { get; set; }
         public Category Category { get; set; } = null!;
 
-        public int OrganizerId { get; set; }
+        public string OrganizerId { get; set; } = "";
         public AppUser Organizer { get; set; } = null!;
 
         public ICollection<Registration> Registrations { get; set; } = new List<Registration>();
