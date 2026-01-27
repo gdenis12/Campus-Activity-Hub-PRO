@@ -4,6 +4,7 @@ using Campus_Activity_Hub_PRO.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Campus_Activity_Hub_PRO.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260126190307_AddDashboard")]
+    partial class AddDashboard
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -117,26 +120,6 @@ namespace Campus_Activity_Hub_PRO.Migrations
                         .IsUnique();
 
                     b.ToTable("Categories");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Description = "All sports events",
-                            Name = "Sports"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Description = "Cultural events",
-                            Name = "Culture"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Description = "Tech and IT events",
-                            Name = "Tech"
-                        });
                 });
 
             modelBuilder.Entity("Campus_Activity_Hub_PRO.Models.ErrorLog", b =>

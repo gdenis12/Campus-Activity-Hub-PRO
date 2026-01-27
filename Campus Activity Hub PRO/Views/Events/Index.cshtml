@@ -1,5 +1,39 @@
-﻿@{
+﻿@model IEnumerable<Campus_Activity_Hub_PRO.Models.Event>
+@{
     ViewData["Title"] = "Events";
 }
 
-<h2>Events page works</h2>
+<h2>Events</h2>
+
+@if (User.IsInRole("Organizer"))
+{
+    <a class="btn btn-success mb-3" asp-action="Create">Create New Event</a>
+}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Date</th>
+            <th>Organizer</th>
+            <th>Capacity</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var ev in Model)
+        {
+            <tr>
+                <td>@ev.Title</td>
+                <td>@ev.Category?.Name</td>
+                <td>@ev.EventDate.ToString("dd.MM.yyyy HH:mm")</td>
+                <td>@ev.Organizer?.Name</td>
+                <td>@ev.Capacity</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@ev.Id" class="btn btn-sm btn-primary">Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

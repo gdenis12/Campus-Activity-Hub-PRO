@@ -91,7 +91,8 @@ namespace Campus_Activity_Hub_PRO.Controllers
             var user = await _userManager.FindByEmailAsync(email);
 
             if (user != null && await _userManager.IsInRoleAsync(user, "Admin"))
-                return RedirectToAction("Dashboard", "Admin");
+                return RedirectToAction("Index", "Dashboard");
+
 
             return RedirectToAction("Index", "Events");
         }

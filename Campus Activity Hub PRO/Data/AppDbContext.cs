@@ -27,6 +27,12 @@ namespace Campus_Activity_Hub_PRO.Data
                 e.HasIndex(x => x.Name).IsUnique();
             });
 
+            b.Entity<Category>().HasData(
+               new Category { Id = 1, Name = "Sports", Description = "All sports events" },
+               new Category { Id = 2, Name = "Culture", Description = "Cultural events" },
+               new Category { Id = 3, Name = "Tech", Description = "Tech and IT events" }
+            );
+
             b.Entity<Event>(e =>
             {
                 e.Property(x => x.Title).HasMaxLength(120).IsRequired();
@@ -46,7 +52,7 @@ namespace Campus_Activity_Hub_PRO.Data
 
                 e.HasQueryFilter(x => !x.IsDeleted);
 
-                e.HasIndex(x => new { x.CategoryId, x.StartsAt });
+                e.HasIndex(x => new { x.CategoryId, x.EventDate });
                 e.HasIndex(x => x.OrganizerId);
             });
 
