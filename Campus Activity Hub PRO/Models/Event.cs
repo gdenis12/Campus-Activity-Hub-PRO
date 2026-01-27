@@ -9,7 +9,7 @@ namespace Campus_Activity_Hub_PRO.Models
         public string Title { get; set; } = null!;
         public string? Description { get; set; }
 
-        public DateTime StartsAt { get; set; }
+        public DateTime EventDate { get; set; }
         public int Capacity { get; set; }
 
         public string? PosterPath { get; set; }

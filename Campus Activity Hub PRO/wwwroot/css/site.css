@@ -1,31 +1,110 @@
-html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
-}
-
+/* === Общий стиль === */
 body {
-  margin-bottom: 60px;
+    background: #121212;
+    color: #e0e0e0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    /* Плавное появление страниц */
+    opacity: 0;
+    transition: opacity 0.8s ease-in-out;
 }
 
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
+    /* === Показываем контент после загрузки === */
+    body.loaded {
+        opacity: 1;
+    }
+
+/* Ссылки */
+a {
+    color: #88c0d0;
+    text-decoration: none;
 }
 
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+    a:hover {
+        color: #81a1c1;
+    }
+
+/* === Хедер === */
+header {
+    background: linear-gradient(135deg, #1f1f1f, #2c2c2c);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.5);
 }
+
+.navbar {
+    padding: 1rem 2rem;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+    color: #88c0d0 !important;
+}
+
+.navbar-nav .nav-link {
+    margin-right: 1rem;
+    color: #e0e0e0 !important;
+    transition: color 0.3s;
+}
+
+    .navbar-nav .nav-link:hover {
+        color: #81a1c1 !important;
+    }
+
+/* === Основной контент === */
+main {
+    padding: 2rem 1rem;
+    min-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.container {
+    max-width: 960px;
+    margin: 0 auto;
+}
+
+/* Карточки / блоки контента */
+.card {
+    background-color: #1f1f1f;
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+    }
+
+/* === Футер === */
+footer {
+    background: #1f1f1f;
+    color: #999;
+    text-align: center;
+    padding: 2rem 1rem;
+    border-top: 1px solid #333;
+}
+
+    footer a {
+        color: #88c0d0;
+    }
+
+/* Меланхоличные акценты */
+.highlight {
+    color: #81a1c1;
+}
+
+/* Кнопки */
+.btn-primary {
+    background-color: #88c0d0;
+    border-color: #88c0d0;
+    transition: background-color 0.3s;
+}
+
+    .btn-primary:hover {
+        background-color: #81a1c1;
+        border-color: #81a1c1;
+    }

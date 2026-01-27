@@ -1,0 +1,65 @@
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+<h2>Admin Dashboard</h2>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<hr />
+
+<h4>Події за категоріями</h4>
+<canvas id="categoriesChart"></canvas>
+
+<h4 class="mt-4">ТОП-5 найпопулярніших подій</h4>
+<canvas id="topEventsChart"></canvas>
+
+<h4 class="mt-4">Реєстрації за місяцями</h4>
+<canvas id="registrationsChart"></canvas>
+
+@using System.Text.Json
+
+<script>
+    var eventsByCategory = @Html.Raw(JsonSerializer.Serialize((IEnumerable<object>)ViewBag.EventsByCategory));
+    var topEvents = @Html.Raw(JsonSerializer.Serialize((IEnumerable<object>)ViewBag.TopEvents));
+    var registrationsByMonth = @Html.Raw(JsonSerializer.Serialize((IEnumerable<object>)ViewBag.RegistrationsByMonth));
+
+    
+    new Chart(document.getElementById('categoriesChart'), {
+        type: 'pie',
+        data: {
+            labels: eventsByCategory.map(x => x.Category),
+            datasets: [{
+                data: eventsByCategory.map(x => x.Count),
+                backgroundColor: ['#FF6384','#36A2EB','#FFCE56','#4BC0C0','#9966FF','#FF9F40']
+            }]
+        }
+    });
+
+    
+    new Chart(document.getElementById('topEventsChart'), {
+        type: 'bar',
+        data: {
+            labels: topEvents.map(x => x.Event),
+            datasets: [{
+                label: 'Реєстрації',
+                data: topEvents.map(x => x.Count),
+                backgroundColor: '#36A2EB'
+            }]
+        }
+    });
+
+    
+    new Chart(document.getElementById('registrationsChart'), {
+        type: 'line',
+        data: {
+            labels: registrationsByMonth.map(x => x.Month),
+            datasets: [{
+                label: 'Кількість реєстрацій',
+                data: registrationsByMonth.map(x => x.Count),
+                borderColor: '#FF6384',
+                fill: false,
+                tension: 0.3
+            }]
+        }
+    });
+</script>
