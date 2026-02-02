@@ -9,17 +9,22 @@ public class LogActionFilter : IActionFilter
     {
         _timer = Stopwatch.StartNew();
 
-        var user = context.HttpContext.User.Identity?.Name ?? "Guest";
+        var user = context.HttpContext.User.Identity?.IsAuthenticated == true
+            ? context.HttpContext.User.Identity.Name
+            : "Guest";
+
+        var request = context.HttpContext.Request;
 
         Console.WriteLine("----- REQUEST START -----");
-        Console.WriteLine($"URL: {context.HttpContext.Request.Path}");
-        Console.WriteLine($"Method: {context.HttpContext.Request.Method}");
+        Console.WriteLine($"URL: {request.Path}");
+        Console.WriteLine($"Method: {request.Method}");
         Console.WriteLine($"User: {user}");
     }
 
     public void OnActionExecuted(ActionExecutedContext context)
     {
         _timer.Stop();
+
         Console.WriteLine($"Execution time: {_timer.ElapsedMilliseconds} ms");
         Console.WriteLine("----- REQUEST END -----");
     }
