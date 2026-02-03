@@ -1,0 +1,40 @@
+﻿@model IEnumerable<Campus_Activity_Hub_PRO.Models.Registration>
+
+@{
+    ViewData["Title"] = "My Events";
+}
+
+<h2>My Events</h2>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        You are not registered for any event yet.
+    </div>
+}
+else
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Event</th>
+                <th>Category</th>
+                <th>Date</th>
+                <th>Organizer</th>
+                <th>Date of registration</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var r in Model)
+            {
+                <tr>
+                    <td>@r.Event.Title</td>
+                    <td>@r.Event.Category?.Name</td>
+                    <td>@r.Event.EventDate.ToString("dd.MM.yyyy HH:mm")</td>
+                    <td>@r.Event.Organizer?.Name</td>
+                    <td>@r.RegistrationDate.ToString("dd.MM.yyyy")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
