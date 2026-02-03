@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Campus_Activity_Hub_PRO.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260120144645_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260203133316_Newmigration")]
+    partial class Newmigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -120,6 +120,26 @@ namespace Campus_Activity_Hub_PRO.Migrations
                         .IsUnique();
 
                     b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "All sports events",
+                            Name = "Sports"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Cultural events",
+                            Name = "Culture"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Tech and IT events",
+                            Name = "Tech"
+                        });
                 });
 
             modelBuilder.Entity("Campus_Activity_Hub_PRO.Models.ErrorLog", b =>
@@ -173,6 +193,9 @@ namespace Campus_Activity_Hub_PRO.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
+                    b.Property<DateTime>("EventDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -184,9 +207,6 @@ namespace Campus_Activity_Hub_PRO.Migrations
                         .HasMaxLength(400)
                         .HasColumnType("nvarchar(400)");
 
-                    b.Property<DateTime>("StartsAt")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(120)
@@ -196,7 +216,7 @@ namespace Campus_Activity_Hub_PRO.Migrations
 
                     b.HasIndex("OrganizerId");
 
-                    b.HasIndex("CategoryId", "StartsAt");
+                    b.HasIndex("CategoryId", "EventDate");
 
                     b.ToTable("Events");
                 });
@@ -218,18 +238,15 @@ namespace Campus_Activity_Hub_PRO.Migrations
 
             modelBuilder.Entity("Campus_Activity_Hub_PRO.Models.Registration", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("EventId")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Comment")
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
-
-                    b.Property<int>("EventId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Feedback")
                         .HasMaxLength(400)
@@ -238,21 +255,15 @@ namespace Campus_Activity_Hub_PRO.Migrations
                     b.Property<DateTime?>("FeedbackAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("RegistrationDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RegistrationDate");
+                    b.HasKey("EventId", "UserId");
 
                     b.HasIndex("UserId");
-
-                    b.HasIndex("EventId", "UserId")
-                        .IsUnique();
 
                     b.ToTable("Registrations");
                 });
@@ -458,7 +469,7 @@ namespace Campus_Activity_Hub_PRO.Migrations
                         .IsRequired();
 
                     b.HasOne("Campus_Activity_Hub_PRO.Models.AppUser", "User")
-                        .WithMany()
+                        .WithMany("Registrations")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -517,6 +528,11 @@ namespace Campus_Activity_Hub_PRO.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Campus_Activity_Hub_PRO.Models.AppUser", b =>
+                {
+                    b.Navigation("Registrations");
                 });
 
             modelBuilder.Entity("Campus_Activity_Hub_PRO.Models.Category", b =>

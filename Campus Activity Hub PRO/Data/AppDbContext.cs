@@ -77,23 +77,19 @@ namespace Campus_Activity_Hub_PRO.Data
 
             b.Entity<Registration>(e =>
             {
-                e.Property(x => x.Comment).HasMaxLength(300);
-                e.Property(x => x.Feedback).HasMaxLength(400);
+                e.HasKey(x => new { x.EventId, x.UserId });
 
                 e.HasOne(x => x.Event)
                  .WithMany(ev => ev.Registrations)
                  .HasForeignKey(x => x.EventId);
 
                 e.HasOne(x => x.User)
-                 .WithMany()
+                 .WithMany(u => u.Registrations)
                  .HasForeignKey(x => x.UserId);
 
-
-                e.HasIndex(x => new { x.EventId, x.UserId }).IsUnique();
-
-                e.HasIndex(x => x.RegistrationDate);
+                e.Property(x => x.Comment).HasMaxLength(300);
+                e.Property(x => x.Feedback).HasMaxLength(400);
             });
-
             b.Entity<ErrorLog>(e =>
             {
                 e.Property(x => x.Path).HasMaxLength(400).IsRequired();

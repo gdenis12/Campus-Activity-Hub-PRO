@@ -28,6 +28,20 @@ public class EventsController : Controller
 
         return View(events);
     }
+    [Authorize(Roles = "Student, Admin")]
+    public async Task<IActionResult> Details(int id)
+    {
+        var ev = await _context.Events
+            .Include(e => e.Category)
+            .Include(e => e.Organizer)
+            .Include(e => e.Registrations)
+            .FirstOrDefaultAsync(e => e.Id == id);
+
+        if (ev == null)
+            return NotFound();
+
+        return View(ev);
+    }
 
     [Authorize(Roles = "Organizer")]
     [HttpGet]
