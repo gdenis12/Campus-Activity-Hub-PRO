@@ -235,18 +235,15 @@ namespace Campus_Activity_Hub_PRO.Migrations
 
             modelBuilder.Entity("Campus_Activity_Hub_PRO.Models.Registration", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("EventId")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Comment")
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
-
-                    b.Property<int>("EventId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Feedback")
                         .HasMaxLength(400)
@@ -255,21 +252,15 @@ namespace Campus_Activity_Hub_PRO.Migrations
                     b.Property<DateTime?>("FeedbackAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("RegistrationDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RegistrationDate");
+                    b.HasKey("EventId", "UserId");
 
                     b.HasIndex("UserId");
-
-                    b.HasIndex("EventId", "UserId")
-                        .IsUnique();
 
                     b.ToTable("Registrations");
                 });
@@ -475,7 +466,7 @@ namespace Campus_Activity_Hub_PRO.Migrations
                         .IsRequired();
 
                     b.HasOne("Campus_Activity_Hub_PRO.Models.AppUser", "User")
-                        .WithMany()
+                        .WithMany("Registrations")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -534,6 +525,11 @@ namespace Campus_Activity_Hub_PRO.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Campus_Activity_Hub_PRO.Models.AppUser", b =>
+                {
+                    b.Navigation("Registrations");
                 });
 
             modelBuilder.Entity("Campus_Activity_Hub_PRO.Models.Category", b =>

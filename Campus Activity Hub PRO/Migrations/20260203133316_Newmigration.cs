@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace Campus_Activity_Hub_PRO.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class Newmigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -210,7 +212,7 @@ namespace Campus_Activity_Hub_PRO.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(120)", maxLength: 120, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
-                    StartsAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EventDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Capacity = table.Column<int>(type: "int", nullable: false),
                     PosterPath = table.Column<string>(type: "nvarchar(400)", maxLength: 400, nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
@@ -262,10 +264,9 @@ namespace Campus_Activity_Hub_PRO.Migrations
                 name: "Registrations",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
                     EventId = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
                     RegistrationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Comment = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: true),
                     Feedback = table.Column<string>(type: "nvarchar(400)", maxLength: 400, nullable: true),
@@ -273,7 +274,7 @@ namespace Campus_Activity_Hub_PRO.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Registrations", x => x.Id);
+                    table.PrimaryKey("PK_Registrations", x => new { x.EventId, x.UserId });
                     table.ForeignKey(
                         name: "FK_Registrations_AspNetUsers_UserId",
                         column: x => x.UserId,
@@ -286,6 +287,16 @@ namespace Campus_Activity_Hub_PRO.Migrations
                         principalTable: "Events",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Categories",
+                columns: new[] { "Id", "Description", "IconCss", "Name" },
+                values: new object[,]
+                {
+                    { 1, "All sports events", null, "Sports" },
+                    { 2, "Cultural events", null, "Culture" },
+                    { 3, "Tech and IT events", null, "Tech" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -334,9 +345,9 @@ namespace Campus_Activity_Hub_PRO.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Events_CategoryId_StartsAt",
+                name: "IX_Events_CategoryId_EventDate",
                 table: "Events",
-                columns: new[] { "CategoryId", "StartsAt" });
+                columns: new[] { "CategoryId", "EventDate" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Events_OrganizerId",
@@ -347,17 +358,6 @@ namespace Campus_Activity_Hub_PRO.Migrations
                 name: "IX_EventTags_TagId",
                 table: "EventTags",
                 column: "TagId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Registrations_EventId_UserId",
-                table: "Registrations",
-                columns: new[] { "EventId", "UserId" },
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Registrations_RegistrationDate",
-                table: "Registrations",
-                column: "RegistrationDate");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Registrations_UserId",
