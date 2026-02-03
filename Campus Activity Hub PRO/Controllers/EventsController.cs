@@ -43,7 +43,7 @@ public class EventsController : Controller
         return View(ev);
     }
 
-    [Authorize(Roles = "Organizer")]
+    [Authorize(Roles = "Organizer, Admin")]
     [HttpGet]
     public IActionResult Create()
     {
