@@ -2,8 +2,11 @@ using Campus_Activity_Hub_PRO.Data;
 using Campus_Activity_Hub_PRO.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.CodeAnalysis;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
 
 builder.Services.AddControllersWithViews(options =>
 {
@@ -30,6 +33,8 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 var app = builder.Build();
+
+
 
 await IdentitySeeder.SeedAsync(app.Services);
 

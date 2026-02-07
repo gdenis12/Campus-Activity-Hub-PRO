@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Campus_Activity_Hub_PRO.Migrations
 {
     /// <inheritdoc />
-    public partial class Newmigration : Migration
+    public partial class AddEvents : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

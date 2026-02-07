@@ -2,33 +2,49 @@
 using Campus_Activity_Hub_PRO.Models;
 using Campus_Activity_Hub_PRO.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
 using System.Linq;
+using System.Security.Claims;
 
 [Authorize]
 public class EventsController : Controller
 {
     private readonly AppDbContext _context;
+    private readonly UserManager<AppUser> _userManager;
 
-    public EventsController(AppDbContext context)
+    public EventsController(AppDbContext context, UserManager<AppUser> userManager)
     {
         _context = context;
+        _userManager = userManager;
     }
 
     [HttpGet]
-    public IActionResult Index()
+    public async Task<IActionResult> Index(string? search)
     {
-        var events = _context.Events
+        var query = _context.Events
             .Include(e => e.Category)
             .Include(e => e.Organizer)
+            .AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            query = query.Where(e =>
+                e.Title.Contains(search) ||
+                e.Category.Name.Contains(search) ||
+                e.Organizer.Name.Contains(search)
+            );
+        }
+
+        var events = await query
             .OrderByDescending(e => e.EventDate)
-            .ToList();
+            .ToListAsync();
 
         return View(events);
     }
-    [Authorize(Roles = "Student, Admin")]
+    [Authorize(Roles = "Student, Admin, Organizer")]
     public async Task<IActionResult> Details(int id)
     {
         var ev = await _context.Events
@@ -63,20 +79,24 @@ public class EventsController : Controller
     [Authorize(Roles = "Organizer")]
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Create(EventCreateViewModel vm)
+    public async Task<IActionResult> Create(EventCreateViewModel vm)
     {
         if (!ModelState.IsValid)
         {
             vm.Categories = _context.Categories
-                .Select(c => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
+                .Select(c => new SelectListItem
                 {
                     Text = c.Name,
                     Value = c.Id.ToString()
                 }).ToList();
+
             return View(vm);
         }
 
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var organizer = await _userManager.GetUserAsync(User);
+
+        if (organizer == null)
+            return Unauthorized();
 
         var ev = new Event
         {
@@ -86,13 +106,39 @@ public class EventsController : Controller
             CategoryId = vm.CategoryId,
             Capacity = vm.Capacity,
             PosterPath = vm.PosterPath,
-            OrganizerId = userId,
+            OrganizerId = organizer.Id, 
             IsDeleted = false
         };
 
         _context.Events.Add(ev);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
 
-        return RedirectToAction("Index");
+        return RedirectToAction(nameof(Index));
     }
+
+    [HttpGet]
+    public async Task<IActionResult> Search(string? search)
+    {
+        var query = _context.Events
+            .Include(e => e.Category)
+            .Include(e => e.Organizer)
+            .AsNoTracking()
+            .AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            query = query.Where(e =>
+                e.Title.Contains(search) ||
+                e.Category.Name.Contains(search) ||
+                e.Organizer.Name.Contains(search)
+            );
+        }
+
+        var events = await query
+            .OrderByDescending(e => e.EventDate)
+            .ToListAsync();
+
+        return PartialView("_EventsTable", events);
+    }
+
 }

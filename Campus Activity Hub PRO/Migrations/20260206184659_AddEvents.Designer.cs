@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Campus_Activity_Hub_PRO.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260203133316_Newmigration")]
-    partial class Newmigration
+    [Migration("20260206184659_AddEvents")]
+    partial class AddEvents
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
