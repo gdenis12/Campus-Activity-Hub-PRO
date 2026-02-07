@@ -61,7 +61,10 @@
                                 <span class="nav-link text-success">Hello, @User.Identity.Name</span>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-danger" asp-controller="Account" asp-action="Logout">Logout</a>
+                                <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline"> @Html.AntiForgeryToken() <button type="submit"   
+                                    class="btn btn-link nav-link text-light p-0"> Logout </button> </form>
+
+
                             </li>
                         }
                         

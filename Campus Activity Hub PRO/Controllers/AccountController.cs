@@ -77,22 +77,36 @@ namespace Campus_Activity_Hub_PRO.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(string email, string password, string? returnUrl = null)
         {
-            var res = await _signInManager.PasswordSignInAsync(email, password, false, lockoutOnFailure: false);
-            if (!res.Succeeded)
+
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
             {
                 ModelState.AddModelError("", "Invalid email or password");
                 ViewBag.ReturnUrl = returnUrl;
                 return View();
             }
 
+
+            var result = await _signInManager.PasswordSignInAsync(
+                user.UserName,
+                password,
+                false,
+                lockoutOnFailure: false
+            );
+
+            if (!result.Succeeded)
+            {
+                ModelState.AddModelError("", "Invalid email or password");
+                ViewBag.ReturnUrl = returnUrl;
+                return View();
+            }
+
+
             if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl))
                 return Redirect(returnUrl);
 
-            var user = await _userManager.FindByEmailAsync(email);
-
-            if (user != null && await _userManager.IsInRoleAsync(user, "Admin"))
+            if (await _userManager.IsInRoleAsync(user, "Admin"))
                 return RedirectToAction("Index", "Dashboard");
-
 
             return RedirectToAction("Index", "Events");
         }
@@ -103,8 +117,13 @@ namespace Campus_Activity_Hub_PRO.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
+
+            Response.Cookies.Delete(".AspNetCore.Identity.Application");
+
             return RedirectToAction("Index", "Events");
         }
+
+
 
         [HttpGet]
         public IActionResult Denied() => View();

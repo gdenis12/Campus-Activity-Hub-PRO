@@ -1,0 +1,44 @@
+﻿@model IEnumerable<Campus_Activity_Hub_PRO.Models.Event>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Date</th>
+            <th>Organizer</th>
+            <th>Capacity</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Any())
+        {
+            <tr>
+                <td colspan="6" class="text-center">
+                    No events found
+                </td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var ev in Model)
+            {
+                <tr>
+                    <td>@ev.Title</td>
+                    <td>@ev.Category?.Name</td>
+                    <td>@ev.EventDate.ToString("dd.MM.yyyy HH:mm")</td>
+                    <td>@ev.Organizer?.Name</td>
+                    <td>@ev.Capacity</td>
+                    <td>
+                        <a asp-action="Details"
+                           asp-route-id="@ev.Id"
+                           class="btn btn-sm btn-primary">
+                            Details
+                        </a>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

@@ -39,40 +39,40 @@ namespace Campus_Activity_Hub_PRO.Controllers
 
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(int eventId)
+        [Authorize(Roles = "Student")]
+        public async Task<IActionResult> RegisterAjax([FromBody] int eventId)
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
-                return Unauthorized();
+                return Json(new { success = false, message = "Unauthorized" });
 
             var ev = await _context.Events
                 .Include(e => e.Registrations)
                 .FirstOrDefaultAsync(e => e.Id == eventId);
 
             if (ev == null)
-                return NotFound();
+                return Json(new { success = false, message = "Event not found" });
 
             if (ev.EventDate < DateTime.Now)
-                return BadRequest("The event has already taken place");
+                return Json(new { success = false, message = "The event has already taken place" });
 
             if (ev.Registrations.Count >= ev.Capacity)
-                return BadRequest("The event is full");
+                return Json(new { success = false, message = "The event is full" });
 
             if (ev.Registrations.Any(r => r.UserId == user.Id))
-                return BadRequest("You are already registered");
+                return Json(new { success = false, message = "You are already registered" });
 
-            var registration = new Registration
+            _context.Registrations.Add(new Registration
             {
                 EventId = ev.Id,
                 UserId = user.Id,
                 RegistrationDate = DateTime.Now
-            };
+            });
 
-            _context.Registrations.Add(registration);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Details", "Events", new { id = ev.Id });
+            return Json(new { success = true });
         }
+
     }
 }
